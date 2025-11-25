@@ -1,59 +1,129 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# DragonSphere
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> Fullstack PHP Laravel Starter
 
-## About Laravel
+**Made by Jerome Edica**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Prerequisites
+- PHP 8.0+
+- Composer
+- Node.js & npm
+- XAMPP (with Apache on port 80 and MySQL on port 3306)
 
-## Learning Laravel
+### Setup Steps
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/system-intelligence/dragon_sphere.git
+   cd dragon_sphere
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Install dependencies:**
+   ```bash
+   composer require livewire/livewire
+   npm i
+   npm install -D tailwindcss postcss autoprefixer
+   npm install -D @tailwindcss/postcss
+   npm install alpinejs
+   ```
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Configuration
 
-### Premium Partners
+Before running `npm run build`, ensure the following files are properly configured:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### postcss.config.js
+```javascript
+export default {
+    plugins: {
+        '@tailwindcss/postcss': {},
+        autoprefixer: {},
+    },
+}
+```
 
-## Contributing
+### tailwind.config.js
+```javascript
+/** @type {import('tailwindcss').Config} */
+export default {
+    content: [
+        "./resources/**/*.blade.php",
+        "./resources/**/*.js",
+        "./resources/**/*.vue",
+        "./app/**/*.php",
+        "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
+    ],
+    theme: {
+        extend: {},
+    },
+    plugins: [],
+}
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### resources/css/app.css
+```css
+@import "tailwindcss";
 
-## Code of Conduct
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+```
 
-## Security Vulnerabilities
+### resources/js/app.js
+```javascript
+import './bootstrap';
+import Alpine from 'alpinejs';
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+window.Alpine = Alpine;
 
-## License
+Alpine.start();
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## Running the Project
+
+### Local Development
+```bash
+php artisan serve
+npm run build
+```
+
+Access the project at: **http://localhost:8000**
+
+### Local Network Access
+
+To run the project on your local network:
+
+1. **Find your IP address:**
+   ```powershell
+   ipconfig
+   ```
+   Look for the **IPv4 Address**
+
+2. **Run the server on your IP:**
+   ```bash
+   php -S 192.168.1.201:8000 -t public
+   ```
+   *(Replace `192.168.1.201` with your actual IPv4 Address)*
+
+3. **Access the project:**
+   **http://192.168.1.201:8000**
+
+---
+
+## Requirements
+
+- **Apache:** Port 80
+- **MySQL:** Port 3306
