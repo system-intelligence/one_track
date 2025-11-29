@@ -57,7 +57,17 @@
                     class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-2xl shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out hover:border-gray-400">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-4">Last Maintenance</label>
+                <label class="block text-sm font-medium text-gray-700 mb-4">UPS</label>
+                <input type="text" name="ups"
+                    class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-2xl shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out hover:border-gray-400">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-4">AVR</label>
+                <input type="text" name="avr"
+                    class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-2xl shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out hover:border-gray-400">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-4">Scheduled Maintenance</label>
                 <input type="date" name="last_maintenance"
                     class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-2xl shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out hover:border-gray-400">
             </div>

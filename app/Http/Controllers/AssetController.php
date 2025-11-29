@@ -22,11 +22,13 @@ class AssetController extends Controller
             'processor' => 'nullable|string',
             'ram' => 'nullable|string',
             'gpu' => 'nullable|string',
+            'ups' => 'nullable|string',
+            'avr' => 'nullable|string',
             'last_maintenance' => 'nullable|date',
             'condition' => 'required|in:Excellent,Good,Fair',
         ]);
 
-        Asset::create($request->only(['office', 'user', 'type', 'os', 'processor', 'ram', 'gpu', 'last_maintenance', 'condition']));
+        Asset::create($request->only(['office', 'user', 'type', 'os', 'processor', 'ram', 'gpu', 'ups', 'avr', 'last_maintenance', 'condition']));
 
         return redirect('/asset')->with('success', 'Asset created successfully.');
     }
@@ -47,11 +49,13 @@ class AssetController extends Controller
             'processor' => 'nullable|string',
             'ram' => 'nullable|string',
             'gpu' => 'nullable|string',
+            'ups' => 'nullable|string',
+            'avr' => 'nullable|string',
             'last_maintenance' => 'nullable|date',
             'condition' => 'required|in:Excellent,Good,Fair',
         ]);
 
-        $asset->update($request->only(['office', 'user', 'type', 'os', 'processor', 'ram', 'gpu', 'last_maintenance', 'condition']));
+        $asset->update($request->only(['office', 'user', 'type', 'os', 'processor', 'ram', 'gpu', 'ups', 'avr', 'last_maintenance', 'condition']));
 
         return redirect('/asset')->with('warning', 'Asset updated successfully.');
     }

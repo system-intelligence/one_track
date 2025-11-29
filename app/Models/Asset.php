@@ -20,6 +20,8 @@ class Asset extends Model
         'processor',
         'ram',
         'gpu',
+        'ups',
+        'avr',
         'condition',
         'last_maintenance',
     ];

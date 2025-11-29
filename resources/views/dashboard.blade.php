@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-8 border border-blue-100">
-    <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome back, {{ Auth::user()->name }}! 👋</h2>
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome back, {{ Auth::user()->name }}!</h2>
     <p class="text-gray-600">{{ Auth::user()->email }}</p>
 </div>
 
@@ -31,7 +31,7 @@
                 </svg>
             </div>
         </div>
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Active Assets</h3>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Excellent Condition</h3>
         <p class="text-4xl font-bold text-green-600 mb-1">{{ \App\Models\Asset::where('condition', 'Excellent')->count() }}</p>
         <p class="text-sm text-gray-500">In excellent condition</p>
     </div>
@@ -44,7 +44,7 @@
                 </svg>
             </div>
         </div>
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Maintenance Due</h3>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Needs Attention</h3>
         <p class="text-4xl font-bold text-yellow-600 mb-1">{{ \App\Models\Asset::where('condition', '!=', 'Excellent')->count() }}</p>
         <p class="text-sm text-gray-500">Needs attention</p>
     </div>
@@ -79,10 +79,5 @@
             </ul>
         </section>
         <!-- Upcoming Maintenance -->
-        <section>
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Maintenance</h3>
-            <div class="bg-white p-6 rounded-lg shadow text-center text-gray-500">
-                No upcoming maintenance scheduled.
-            </div>
-        </section>
+        @include('dashboard-upcoming-maintenance', compact('assets_with_maintenance'))
 @endsection

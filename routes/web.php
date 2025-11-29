@@ -5,7 +5,13 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AssetController;
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $assets_with_maintenance = \App\Models\Asset::whereNotNull('last_maintenance')
+        ->get()
+        ->map(function ($asset) {
+            $asset->next_maintenance = $asset->last_maintenance->copy()->addMonths(6);
+            return $asset;
+        });
+    return view('dashboard', compact('assets_with_maintenance'));
 })->middleware('auth');
 Route::get('/asset', function () {
     return view('asset', ['assets' => \App\Models\Asset::all()]);
