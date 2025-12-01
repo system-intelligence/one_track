@@ -70,7 +70,6 @@
               <option>All Types</option>
               <option>Laptop</option>
               <option>Desktop</option>
-              <option>Monitor</option>
             </select>
             <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,6 +107,7 @@
                 <th class="px-4 py-3 text-left hidden md:table-cell">Processor</th>
                 <th class="px-4 py-3 text-left hidden md:table-cell">RAM</th>
                 <th class="px-4 py-3 text-left hidden lg:table-cell">GPU</th>
+                <th class="px-4 py-3 text-left hidden lg:table-cell">Peripherals</th>
                 <th class="px-4 py-3 text-left hidden lg:table-cell">UPS</th>
                 <th class="px-4 py-3 text-left hidden lg:table-cell">AVR</th>
                 <th class="px-4 py-3 text-left sticky right-16 bg-gray-50">Condition</th>
@@ -126,6 +126,7 @@
                 <td class="px-4 py-3 hidden md:table-cell max-w-40 truncate">{{ $asset->processor ?? '-' }}</td>
                 <td class="px-4 py-3 hidden md:table-cell max-w-24 truncate">{{ $asset->ram ?? '-' }}</td>
                 <td class="px-4 py-3 hidden lg:table-cell max-w-40 truncate">{{ $asset->gpu ?? '-' }}</td>
+                <td class="px-4 py-3 hidden lg:table-cell max-w-40 truncate">{{ $asset->peripherals ?? '-' }}</td>
                 <td class="px-4 py-3 hidden lg:table-cell max-w-40 truncate">{{ $asset->ups ?? '-' }}</td>
                 <td class="px-4 py-3 hidden lg:table-cell max-w-40 truncate">{{ $asset->avr ?? '-' }}</td>
                 <td class="px-4 py-3 sticky right-16 bg-white">
@@ -168,7 +169,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="11" class="px-4 py-4 text-center text-gray-500">No assets found.</td>
+                <td colspan="12" class="px-4 py-4 text-center text-gray-500">No assets found.</td>
             </tr>
             @endforelse
         </tbody>

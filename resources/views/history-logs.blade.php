@@ -37,8 +37,8 @@
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
                             @elseif($log->action == 'UPDATE')
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M11 5H9a1 1 0 00-1 1v3H6a1 1 0 00-1 1v3a1 1 0 001 1h3v3a1 1 0 001 1h2a1 1 0 001-1v-3h3a1 1 0 001-1V9a1 1 0 00-1-1h-3V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                 </svg>
                             @else
                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -128,8 +128,45 @@ function showChanges(button) {
     }
 
     function formatValues(values) {
-        if (!values) return 'No data available';
-        return JSON.stringify(values, null, 2);
+        if (!values) return '<span class="text-gray-500 italic">No data available</span>';
+
+        const formatDateTime = (dateString) => {
+            if (!dateString) return dateString;
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return dateString; // Invalid date
+                return date.toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
+            } catch (e) {
+                return dateString;
+            }
+        };
+
+        let html = '<div class="space-y-1">';
+        for (const [key, value] of Object.entries(values)) {
+            const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            let displayValue = value === null || value === '' ? '<span class="text-gray-400 italic">Empty</span>' : value;
+
+            // Format dates if this is a date/time field
+            if (displayKey.toLowerCase().includes('date') || displayKey.toLowerCase().includes('time') ||
+                displayKey.toLowerCase().includes('created') || displayKey.toLowerCase().includes('updated')) {
+                displayValue = formatDateTime(displayValue);
+            }
+
+            html += `<div class="flex justify-between py-1 border-b border-gray-100 last:border-b-0">
+                <span class="font-medium text-gray-700 text-xs">${displayKey}:</span>
+                <span class="text-gray-900 text-xs ml-2 break-all">${displayValue}</span>
+            </div>`;
+        }
+        html += '</div>';
+        return html;
     }
 
     function generateDiffView(oldValues, newValues) {
@@ -145,28 +182,61 @@ function showChanges(button) {
             const newVal = newValues[key];
 
             if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
+                const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
                 if (oldVal === undefined) {
                     // Added
+                    const displayValue = newVal === null || newVal === '' ? '<span class="italic">Empty</span>' : newVal;
                     changes.push(`<div class="mb-2 p-2 bg-green-50 border-l-4 border-green-400 rounded">
                         <span class="text-green-800 font-semibold text-xs">ADDED:</span>
-                        <span class="text-green-700 font-medium">${key}:</span>
-                        <span class="text-green-600">${JSON.stringify(newVal)}</span>
+                        <span class="text-green-700 font-medium">${displayKey}:</span>
+                        <span class="text-green-600 ml-1">${displayValue}</span>
                     </div>`);
                 } else if (newVal === undefined) {
                     // Removed
+                    const displayValue = oldVal === null || oldVal === '' ? '<span class="italic">Empty</span>' : oldVal;
                     changes.push(`<div class="mb-2 p-2 bg-red-50 border-l-4 border-red-400 rounded">
                         <span class="text-red-800 font-semibold text-xs">REMOVED:</span>
-                        <span class="text-red-700 font-medium">${key}:</span>
-                        <span class="text-red-600">${JSON.stringify(oldVal)}</span>
+                        <span class="text-red-700 font-medium">${displayKey}:</span>
+                        <span class="text-red-600 ml-1">${displayValue}</span>
                     </div>`);
                 } else {
                     // Changed
+                    const formatDateTime = (dateString) => {
+                        if (!dateString || dateString === '<span class="italic">Empty</span>') return dateString;
+                        try {
+                            const date = new Date(dateString);
+                            if (isNaN(date.getTime())) return dateString; // Invalid date
+                            return date.toLocaleString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                hour12: true
+                            });
+                        } catch (e) {
+                            return dateString;
+                        }
+                    };
+
+                    let displayOldVal = oldVal === null || oldVal === '' ? '<span class="italic">Empty</span>' : oldVal;
+                    let displayNewVal = newVal === null || newVal === '' ? '<span class="italic">Empty</span>' : newVal;
+
+                    // Format dates if this is a date/time field
+                    if (displayKey.toLowerCase().includes('date') || displayKey.toLowerCase().includes('time') ||
+                        displayKey.toLowerCase().includes('created') || displayKey.toLowerCase().includes('updated')) {
+                        displayOldVal = formatDateTime(displayOldVal);
+                        displayNewVal = formatDateTime(displayNewVal);
+                    }
+
                     changes.push(`<div class="mb-2 p-2 bg-yellow-50 border-l-4 border-yellow-400 rounded">
                         <span class="text-yellow-800 font-semibold text-xs">CHANGED:</span>
-                        <span class="text-yellow-700 font-medium">${key}</span>
+                        <span class="text-yellow-700 font-medium">${displayKey}</span>
                         <div class="mt-1 text-xs">
-                            <div class="text-red-600">From: ${JSON.stringify(oldVal)}</div>
-                            <div class="text-green-600">To: ${JSON.stringify(newVal)}</div>
+                            <div class="text-red-600">From: ${displayOldVal}</div>
+                            <div class="text-green-600">To: ${displayNewVal}</div>
                         </div>
                     </div>`);
                 }
@@ -184,21 +254,40 @@ function showChanges(button) {
     const newValues = decodeAndParse(newValuesEncoded);
 
     content.innerHTML = `
-        <div class="space-y-4">
-            <div class="bg-gray-50 p-4 rounded border-l-4 border-gray-400">
-                <h4 class="font-semibold text-gray-800 mb-3">Changes Summary:</h4>
+        <div class="space-y-6">
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 class="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    Changes Summary
+                </h4>
                 <div class="space-y-2">
                     ${generateDiffView(oldValues, newValues)}
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-red-50 p-4 rounded border-l-4 border-red-400">
-                    <h4 class="font-semibold text-red-800 mb-2">Before:</h4>
-                    <pre class="text-xs bg-white p-3 rounded border overflow-x-auto text-gray-800 max-h-40 overflow-y-auto">${formatValues(oldValues)}</pre>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                    <h4 class="font-semibold text-red-800 mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                        </svg>
+                        Before Changes
+                    </h4>
+                    <div class="bg-white p-3 rounded border max-h-60 overflow-y-auto">
+                        ${formatValues(oldValues)}
+                    </div>
                 </div>
-                <div class="bg-green-50 p-4 rounded border-l-4 border-green-400">
-                    <h4 class="font-semibold text-green-800 mb-2">After:</h4>
-                    <pre class="text-xs bg-white p-3 rounded border overflow-x-auto text-gray-800 max-h-40 overflow-y-auto">${formatValues(newValues)}</pre>
+                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h4 class="font-semibold text-green-800 mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        After Changes
+                    </h4>
+                    <div class="bg-white p-3 rounded border max-h-60 overflow-y-auto">
+                        ${formatValues(newValues)}
+                    </div>
                 </div>
             </div>
         </div>

@@ -20,6 +20,7 @@ class Asset extends Model
         'processor',
         'ram',
         'gpu',
+        'peripherals',
         'ups',
         'avr',
         'condition',
