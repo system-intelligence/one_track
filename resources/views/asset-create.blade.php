@@ -27,7 +27,6 @@
                     <select name="type" class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-2xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out hover:border-gray-400 bg-white appearance-none">
                         <option>Laptop</option>
                         <option>Desktop</option>
-                        <option>Monitor</option>
                     </select>
                     <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,11 +63,6 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-4">AVR</label>
                 <input type="text" name="avr"
-                    class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-2xl shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out hover:border-gray-400">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-4">Scheduled Maintenance</label>
-                <input type="date" name="last_maintenance"
                     class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-2xl shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out hover:border-gray-400">
             </div>
             <div>

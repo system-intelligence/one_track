@@ -79,5 +79,5 @@
             </ul>
         </section>
         <!-- Upcoming Maintenance -->
-        @include('dashboard-upcoming-maintenance', compact('assets_with_maintenance'))
+        @include('dashboard-upcoming-maintenance')
 @endsection

@@ -68,11 +68,6 @@
                     class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-2xl shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out hover:border-gray-400">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-4">Scheduled Maintenance</label>
-                <input type="date" name="last_maintenance" value="{{ $asset->last_maintenance ? $asset->last_maintenance->format('Y-m-d') : '' }}"
-                    class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-2xl shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out hover:border-gray-400">
-            </div>
-            <div>
                 <label class="block text-sm font-medium text-gray-700 mb-4">Condition</label>
                 <div class="relative">
                     <select name="condition" class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-2xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out hover:border-gray-400 bg-white appearance-none">

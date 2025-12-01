@@ -24,7 +24,7 @@
       <nav class="hidden md:flex items-center justify-center gap-8 text-sm font-medium text-white">
         <a href="{{ url('/dashboard') }}" class="hover:text-blue-200 transition duration-200">Dashboard</a>
         <a href="{{ url('/asset') }}" class="hover:text-blue-200 transition duration-200">Assets</a>
-        <a href="{{ url('/history') }}" class="hover:text-blue-200 transition duration-200">History Log</a>
+        <a href="{{ route('history.index') }}" class="hover:text-blue-200 transition duration-200">History Log</a>
       </nav>
 
       <!-- Logout -->
@@ -47,7 +47,7 @@
     <nav class="flex flex-col gap-3 text-sm font-medium text-white">
       <a href="{{ url('/dashboard') }}" class="hover:text-blue-200 transition">Dashboard</a>
       <a href="{{ url('/asset') }}" class="hover:text-blue-200 transition">Assets</a>
-      <a href="{{ url('/history') }}" class="hover:text-blue-200 transition">History Log</a>
+      <a href="{{ route('history.index') }}" class="hover:text-blue-200 transition">History Log</a>
     </nav>
   </div> --}}
 </header>

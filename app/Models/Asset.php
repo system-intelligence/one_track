@@ -10,7 +10,7 @@ class Asset extends Model
     use HasFactory;
 
     protected $casts = [
-        'last_maintenance' => 'date',
+        //
     ];
     protected $fillable = [
         'office',
@@ -23,6 +23,5 @@ class Asset extends Model
         'ups',
         'avr',
         'condition',
-        'last_maintenance',
     ];
 }

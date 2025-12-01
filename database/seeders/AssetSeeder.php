@@ -16,3 +16,4 @@ class AssetSeeder extends Seeder
     }
 }
 
+

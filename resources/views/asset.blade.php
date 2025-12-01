@@ -101,7 +101,6 @@
         <thead class="bg-gray-50 text-gray-700 uppercase text-xs tracking-wider">
             <tr>
                 <th class="px-4 py-3 text-center">No.</th>
-                <th class="px-4 py-3 text-left">Scheduled Maintenance</th>
                 <th class="px-4 py-3 text-left">Office</th>
                 <th class="px-4 py-3 text-left">User</th>
                 <th class="px-4 py-3 text-left">Type</th>
@@ -119,8 +118,7 @@
         <tbody class="divide-y divide-gray-100">
             @forelse($assets as $asset)
             <tr class="hover:bg-blue-50 transition">
-                <td class="px-4 py-3 text-center">{{ $loop->iteration }}</td>
-                <td class="px-4 py-3 max-w-32 truncate">{{ $asset->last_maintenance ? $asset->last_maintenance->format('M d, Y') : '-' }}</td>
+                <td class="px-4 py-3 text-center">{{ $assets->firstItem() + $loop->index }}</td>
                 <td class="px-4 py-3 max-w-32 truncate">{{ $asset->office }}</td>
                 <td class="px-4 py-3 max-w-32 truncate">{{ $asset->user ?? '-' }}</td>
                 <td class="px-4 py-3 max-w-24 truncate">{{ $asset->type }}</td>
@@ -170,12 +168,74 @@
             </tr>
             @empty
             <tr>
-                <td colspan="12" class="px-4 py-4 text-center text-gray-500">No assets found.</td>
+                <td colspan="11" class="px-4 py-4 text-center text-gray-500">No assets found.</td>
             </tr>
             @endforelse
         </tbody>
     </table>
 </div>
 
+<!-- Pagination -->
+@if($assets->hasPages())
+<div class="mt-6 flex justify-center">
+    {{ $assets->links() }}
+</div>
+@endif
+
 
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search');
+    const officeSelect = document.getElementById('office');
+    const conditionSelect = document.getElementById('condition');
+    const typeSelect = document.getElementById('type');
+    const tableRows = document.querySelectorAll('tbody tr:not(.empty-row)');
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedOffice = officeSelect.value;
+        const selectedCondition = conditionSelect.value;
+        const selectedType = typeSelect.value;
+
+        tableRows.forEach(row => {
+            if (row.cells.length <= 1) return; // Skip empty rows
+
+            const office = row.cells[1].textContent.toLowerCase();
+            const user = row.cells[2].textContent.toLowerCase();
+            const type = row.cells[3].textContent.toLowerCase();
+            const conditionCell = row.cells[10];
+            const condition = conditionCell.textContent.trim().toLowerCase();
+
+            const matchesSearch = searchTerm === '' ||
+                office.includes(searchTerm) ||
+                user.includes(searchTerm) ||
+                type.includes(searchTerm);
+
+            const matchesOffice = selectedOffice === 'All Offices' || office === selectedOffice.toLowerCase();
+            const matchesCondition = selectedCondition === 'All Conditions' || condition.includes(selectedCondition.toLowerCase());
+            const matchesType = selectedType === 'All Types' || type === selectedType.toLowerCase();
+
+            if (matchesSearch && matchesOffice && matchesCondition && matchesType) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Update row numbers
+        let visibleIndex = 1;
+        tableRows.forEach(row => {
+            if (row.style.display !== 'none' && row.cells.length > 1) {
+                row.cells[0].textContent = visibleIndex++;
+            }
+        });
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    officeSelect.addEventListener('change', filterTable);
+    conditionSelect.addEventListener('change', filterTable);
+    typeSelect.addEventListener('change', filterTable);
+});
+</script>
