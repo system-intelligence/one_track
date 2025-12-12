@@ -23,12 +23,15 @@ class AssetController extends Controller
             'processor' => 'nullable|string',
             'ram' => 'nullable|string',
             'gpu' => 'nullable|string',
-            'ups' => 'nullable|string',
-            'avr' => 'nullable|string',
-            'condition' => 'required|in:Excellent,Good,Fair',
+            'peripherals' => 'nullable|array',
+            'peripherals.*.type' => 'required|string',
+            'peripherals.*.details' => 'nullable|string',
+            'peripherals.*.condition' => 'nullable|in:working,needs repair,broken',
+            'surge_protector' => 'nullable|in:UPS,AVR,None',
+            'condition' => 'nullable|in:working,needs repair,broken',
         ]);
 
-        $asset = Asset::create($request->only(['office', 'user', 'type', 'os', 'processor', 'ram', 'gpu', 'ups', 'avr', 'condition']));
+        $asset = Asset::create($request->only(['office', 'user', 'type', 'os', 'processor', 'ram', 'gpu', 'peripherals', 'surge_protector']));
 
         // Log the creation
         HistoryLog::create([
@@ -44,7 +47,6 @@ class AssetController extends Controller
 
     public function edit(Asset $asset)
     {
-        // Placeholder for edit view
         return view('asset-edit', compact('asset'));
     }
 
@@ -58,13 +60,16 @@ class AssetController extends Controller
             'processor' => 'nullable|string',
             'ram' => 'nullable|string',
             'gpu' => 'nullable|string',
-            'ups' => 'nullable|string',
-            'avr' => 'nullable|string',
-            'condition' => 'required|in:Excellent,Good,Fair',
+            'peripherals' => 'nullable|array',
+            'peripherals.*.type' => 'required|string',
+            'peripherals.*.details' => 'nullable|string',
+            'peripherals.*.condition' => 'nullable|in:working,needs repair,broken',
+            'surge_protector' => 'nullable|in:UPS,AVR,None',
+            'condition' => 'nullable|in:working,needs repair,broken',
         ]);
 
         $oldValues = $asset->toArray();
-        $asset->update($request->only(['office', 'user', 'type', 'os', 'processor', 'ram', 'gpu', 'ups', 'avr', 'condition']));
+        $asset->update($request->only(['office', 'user', 'type', 'os', 'processor', 'ram', 'gpu', 'peripherals', 'surge_protector']));
 
         // Log the update
         HistoryLog::create([

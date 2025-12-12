@@ -9,18 +9,18 @@
 </div>
 
 <!-- Dashboard Summary -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition">
         <div class="flex items-center justify-center mb-4">
             <div class="bg-blue-100 p-3 rounded-full">
                 <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
             </div>
         </div>
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Assets</h3>
-        <p class="text-4xl font-bold text-blue-600 mb-1">{{ \App\Models\Asset::count() }}</p>
-        <p class="text-sm text-gray-500">All registered assets</p>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Employees</h3>
+        <p class="text-4xl font-bold text-blue-600 mb-1">{{ \App\Models\Asset::whereNotNull('user')->distinct('user')->count() }}</p>
+        <p class="text-sm text-gray-500">All registered employees</p>
     </div>
 
     <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition">
@@ -31,9 +31,9 @@
                 </svg>
             </div>
         </div>
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Excellent Condition</h3>
-        <p class="text-4xl font-bold text-green-600 mb-1">{{ \App\Models\Asset::where('condition', 'Excellent')->count() }}</p>
-        <p class="text-sm text-gray-500">In excellent condition</p>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Working</h3>
+        <p class="text-4xl font-bold text-green-600 mb-1">{{ \App\Models\Asset::where('condition', 'working')->count() + collect(\App\Models\Asset::all()->pluck('peripherals')->flatten(1))->where('condition', 'working')->count() }}</p>
+        <p class="text-sm text-gray-500">In working condition</p>
     </div>
 
     <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition">
@@ -44,9 +44,22 @@
                 </svg>
             </div>
         </div>
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Needs Attention</h3>
-        <p class="text-4xl font-bold text-yellow-600 mb-1">{{ \App\Models\Asset::where('condition', '!=', 'Excellent')->count() }}</p>
-        <p class="text-sm text-gray-500">Needs attention</p>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Needs Repair</h3>
+        <p class="text-4xl font-bold text-yellow-600 mb-1">{{ \App\Models\Asset::where('condition', 'needs repair')->count() + collect(\App\Models\Asset::all()->pluck('peripherals')->flatten(1))->where('condition', 'needs repair')->count() }}</p>
+        <p class="text-sm text-gray-500">Needs repair</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition">
+        <div class="flex items-center justify-center mb-4">
+            <div class="bg-red-100 p-3 rounded-full">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Broken</h3>
+        <p class="text-4xl font-bold text-red-600 mb-1">{{ \App\Models\Asset::where('condition', 'broken')->count() + collect(\App\Models\Asset::all()->pluck('peripherals')->flatten(1))->where('condition', 'broken')->count() }}</p>
+        <p class="text-sm text-gray-500">Broken condition</p>
     </div>
 </div>
 

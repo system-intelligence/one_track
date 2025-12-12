@@ -10,7 +10,32 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth');
 Route::get('/asset', function () {
-    return view('asset', ['assets' => \App\Models\Asset::paginate(50)]);
+    $query = \App\Models\Asset::query();
+
+    if (request('search')) {
+        $search = request('search');
+        $query->where(function($q) use ($search) {
+            $q->where('id', 'like', "%{$search}%")
+              ->orWhere('user', 'like', "%{$search}%")
+              ->orWhere('office', 'like', "%{$search}%");
+        });
+    }
+
+    if (request('office') && request('office') !== 'All Offices') {
+        $query->where('office', request('office'));
+    }
+
+    if (request('condition') && request('condition') !== 'All Conditions') {
+        $query->where('condition', request('condition'));
+    }
+
+    if (request('type') && request('type') !== 'All Types') {
+        $query->where('type', request('type'));
+    }
+
+    $assets = $query->paginate(50)->appends(request()->query());
+
+    return view('asset', compact('assets'));
 })->middleware('auth');
 
 Route::get('/history', [HistoryLogController::class, 'index'])->name('history.index')->middleware('auth');

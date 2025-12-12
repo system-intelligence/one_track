@@ -12,21 +12,42 @@ class MaintenanceController extends Controller
     {
         $request->validate([
             'date' => 'required|date',
-            'user_name' => 'required|string',
-            'description' => 'nullable|string',
+            'user_names' => 'required|array',
+            'user_names.*' => 'string',
+            'descriptions' => 'required|array',
+            'descriptions.*' => 'nullable|string',
         ]);
 
-        $maintenance = Maintenance::create($request->all());
+        $userNames = implode(', ', array_map('ucwords', $request->user_names));
+        $descriptions = array_filter($request->descriptions, function($desc) {
+            return trim($desc) !== '';
+        });
 
-        // Log the creation
-        HistoryLog::create([
-            'action' => 'CREATE',
-            'model_type' => 'Maintenance',
-            'model_id' => $maintenance->id,
-            'new_values' => $maintenance->toArray(),
-            'description' => "Maintenance scheduled for {$maintenance->user_name} on {$maintenance->date}",
-        ]);
+        if (empty($descriptions)) {
+            $descriptions = [''];
+        }
 
-        return redirect()->back()->with('success', 'Maintenance scheduled successfully.');
+        $createdMaintenances = [];
+
+        foreach ($descriptions as $desc) {
+            $maintenance = Maintenance::create([
+                'date' => $request->date,
+                'user_name' => $userNames,
+                'description' => trim($desc),
+            ]);
+
+            $createdMaintenances[] = $maintenance;
+
+            // Log the creation
+            HistoryLog::create([
+                'action' => 'CREATE',
+                'model_type' => 'Maintenance',
+                'model_id' => $maintenance->id,
+                'new_values' => $maintenance->toArray(),
+                'description' => "Maintenance scheduled for {$maintenance->user_name} on {$maintenance->date}",
+            ]);
+        }
+
+        return redirect()->back()->with('success', count($createdMaintenances) . ' maintenance(s) scheduled successfully.');
     }
 }

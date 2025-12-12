@@ -10,7 +10,7 @@ class Asset extends Model
     use HasFactory;
 
     protected $casts = [
-        //
+        'peripherals' => 'array',
     ];
     protected $fillable = [
         'office',
@@ -21,8 +21,12 @@ class Asset extends Model
         'ram',
         'gpu',
         'peripherals',
-        'ups',
-        'avr',
+        'surge_protector',
         'condition',
     ];
+
+    public function maintenances()
+    {
+        return $this->hasMany(Maintenance::class);
+    }
 }

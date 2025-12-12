@@ -13,13 +13,18 @@
         <div>
           <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search Assets</label>
           <div class="relative">
-            <input type="text" id="search" placeholder="Search by name..."
-              class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm" />
+            <input type="text" id="search" placeholder="Search by asset number, employee, or office..."
+              class="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm" />
             <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 4a7 7 0 100 14 7 7 0 000-14z"></path>
               </svg>
             </div>
+            <button type="button" id="clear-search" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -49,9 +54,9 @@
             <select id="condition"
               class="appearance-none w-full px-4 py-3 pr-10 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
               <option>All Conditions</option>
-              <option>Excellent</option>
-              <option>Good</option>
-              <option>Fair</option>
+              <option>working</option>
+              <option>needs repair</option>
+              <option>broken</option>
             </select>
             <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,87 +98,106 @@
       </div>
     </div>
 
-    <!-- Table Card -->
+    <!-- Grid Card -->
 
-<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-x-auto relative">
-    <table class="min-w-full divide-y divide-gray-200 text-sm table-fixed">
-        <thead class="bg-gray-50 text-gray-700 uppercase text-xs tracking-wider">
-            <tr>
-                <th class="px-4 py-3 text-center">No.</th>
-                <th class="px-4 py-3 text-left">Office</th>
-                <th class="px-4 py-3 text-left">User</th>
-                <th class="px-4 py-3 text-left">Type</th>
-                <th class="px-4 py-3 text-left">OS</th>
-                <th class="px-4 py-3 text-left hidden md:table-cell">Processor</th>
-                <th class="px-4 py-3 text-left hidden md:table-cell">RAM</th>
-                <th class="px-4 py-3 text-left hidden lg:table-cell">GPU</th>
-                <th class="px-4 py-3 text-left hidden lg:table-cell">Peripherals</th>
-                <th class="px-4 py-3 text-left hidden lg:table-cell">UPS</th>
-                <th class="px-4 py-3 text-left hidden lg:table-cell">AVR</th>
-                <th class="px-4 py-3 text-left sticky right-16 bg-gray-50">Condition</th>
-                <th class="px-4 py-3 text-center sticky right-0 bg-gray-50">Actions</th>
-            </tr>
-        </thead>
-
-        <tbody class="divide-y divide-gray-100">
-            @forelse($assets as $asset)
-            <tr class="hover:bg-blue-50 transition">
-                <td class="px-4 py-3 text-center">{{ $assets->firstItem() + $loop->index }}</td>
-                <td class="px-4 py-3 max-w-32 truncate">{{ $asset->office }}</td>
-                <td class="px-4 py-3 max-w-32 truncate">{{ $asset->user ?? '-' }}</td>
-                <td class="px-4 py-3 max-w-24 truncate">{{ $asset->type }}</td>
-                <td class="px-4 py-3 max-w-24 truncate">{{ $asset->os ?? '-' }}</td>
-                <td class="px-4 py-3 hidden md:table-cell max-w-40 truncate">{{ $asset->processor ?? '-' }}</td>
-                <td class="px-4 py-3 hidden md:table-cell max-w-24 truncate">{{ $asset->ram ?? '-' }}</td>
-                <td class="px-4 py-3 hidden lg:table-cell max-w-40 truncate">{{ $asset->gpu ?? '-' }}</td>
-                <td class="px-4 py-3 hidden lg:table-cell max-w-40 truncate">{{ $asset->peripherals ?? '-' }}</td>
-                <td class="px-4 py-3 hidden lg:table-cell max-w-40 truncate">{{ $asset->ups ?? '-' }}</td>
-                <td class="px-4 py-3 hidden lg:table-cell max-w-40 truncate">{{ $asset->avr ?? '-' }}</td>
-                <td class="px-4 py-3 sticky right-16 bg-white">
-                    <span class="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded-full
-                        {{ $asset->condition == 'Excellent' ? 'bg-green-100 text-green-800' : ($asset->condition == 'Good' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
-                        @if($asset->condition == 'Excellent')
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        @elseif($asset->condition == 'Good')
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                            </svg>
-                        @else
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                            </svg>
-                        @endif
-                        {{ $asset->condition }}
-                    </span>
-                </td>
-                <td class="px-4 py-3 sticky right-0 bg-white flex justify-center items-center space-x-2">
-                    <a href="{{ route('assets.edit', $asset->id) }}"
-                        class="p-3 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition shadow-sm inline-flex items-center justify-center"
-                        title="Edit">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @if($assets->isEmpty())
+        <div class="col-span-full text-center py-8 text-gray-500">
+            @if(request('search'))
+                No assets found for search: "{{ request('search') }}"
+            @else
+                No assets found matching the current filters.
+            @endif
+        </div>
+        @else
+        @foreach($assets as $asset)
+        <div class="asset-card bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-blue-300 relative overflow-hidden">
+            <div class="absolute top-4 right-4">
+                <div class="text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">{{ $asset->id }}</div>
+            </div>
+            <div class="space-y-4 pr-16">
+                <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
-                    </a>
-                    <form action="{{ route('assets.destroy', $asset->id) }}" method="POST" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this asset?')" class="p-3 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition shadow-sm inline-flex items-center justify-center" title="Delete">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                            </svg>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="12" class="px-4 py-4 text-center text-gray-500">No assets found.</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                    </div>
+                    <div class="flex-1">
+                        <p><span class="text-sm font-medium text-gray-500">Employee's Name</span></p>
+                        <p><span class="text-xl font-bold text-gray-900 truncate">{{ Str::limit($asset->user ?? '-', 20) }}</span></p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0 w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <p><span class="text-xs font-medium text-gray-500">Type of Office</span></p>
+                        <p><span class="text-sm font-medium text-gray-700">{{ $asset->office }}</span></p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0 w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <p><span class="text-xs font-medium text-gray-500">Type</span></p>
+                        <p><span class="text-sm font-medium text-gray-700">{{ $asset->type }}</span></p>
+                    </div>
+                </div>
+                @php
+                    $peripheralConditions = ['working' => 0, 'needs repair' => 0, 'broken' => 0];
+                    if ($asset->peripherals) {
+                        foreach ($asset->peripherals as $peripheral) {
+                            $condition = $peripheral['condition'] ?? '';
+                            if (isset($peripheralConditions[$condition])) {
+                                $peripheralConditions[$condition]++;
+                            }
+                        }
+                    }
+                @endphp
+                @if($asset->peripherals && count($asset->peripherals) > 0)
+                <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                    <p class="text-xs font-medium text-gray-600 mb-2">Peripheral Conditions</p>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-green-600">Working: {{ $peripheralConditions['working'] }}</span>
+                        <span class="text-yellow-600">Needs repair: {{ $peripheralConditions['needs repair'] }}</span>
+                        <span class="text-red-600">Broken: {{ $peripheralConditions['broken'] }}</span>
+                    </div>
+                </div>
+                @endif
+            </div>
+            <div class="flex flex-col sm:flex-row justify-end sm:space-x-3 space-y-3 sm:space-y-0 mt-6 pt-4 border-t border-gray-100">
+                <a href="{{ route('assets.edit', $asset->id) }}"
+                    class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all duration-200 border border-blue-200 hover:border-blue-300 w-full sm:w-auto">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Edit
+                </a>
+                <form action="{{ route('assets.destroy', $asset->id) }}" method="POST" class="w-full sm:w-auto">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" onclick="return confirm('Are you sure you want to delete this asset?')" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 border border-red-200 hover:border-red-300 w-full">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+        @endforeach
+        @endif
+    </div>
+    <div id="no-results" class="col-span-full text-center py-8 text-gray-500 hidden">
+        search not found
+    </div>
 </div>
 
 <!-- Pagination -->
@@ -192,51 +216,61 @@ document.addEventListener('DOMContentLoaded', function() {
     const officeSelect = document.getElementById('office');
     const conditionSelect = document.getElementById('condition');
     const typeSelect = document.getElementById('type');
-    const tableRows = document.querySelectorAll('tbody tr:not(.empty-row)');
 
-    function filterTable() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const selectedOffice = officeSelect.value;
-        const selectedCondition = conditionSelect.value;
-        const selectedType = typeSelect.value;
+    // Get current URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
 
-        tableRows.forEach(row => {
-            if (row.cells.length <= 1) return; // Skip empty rows
+    // Set initial values from URL parameters
+    const searchParam = urlParams.get('search');
+    const officeParam = urlParams.get('office');
+    const conditionParam = urlParams.get('condition');
+    const typeParam = urlParams.get('type');
 
-            const office = row.cells[1].textContent.toLowerCase();
-            const user = row.cells[2].textContent.toLowerCase();
-            const type = row.cells[3].textContent.toLowerCase();
-            const conditionCell = row.cells[10];
-            const condition = conditionCell.textContent.trim().toLowerCase();
-
-            const matchesSearch = searchTerm === '' ||
-                office.includes(searchTerm) ||
-                user.includes(searchTerm) ||
-                type.includes(searchTerm);
-
-            const matchesOffice = selectedOffice === 'All Offices' || office === selectedOffice.toLowerCase();
-            const matchesCondition = selectedCondition === 'All Conditions' || condition.includes(selectedCondition.toLowerCase());
-            const matchesType = selectedType === 'All Types' || type === selectedType.toLowerCase();
-
-            if (matchesSearch && matchesOffice && matchesCondition && matchesType) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        // Update row numbers
-        let visibleIndex = 1;
-        tableRows.forEach(row => {
-            if (row.style.display !== 'none' && row.cells.length > 1) {
-                row.cells[0].textContent = visibleIndex++;
-            }
-        });
+    if (searchParam) {
+        searchInput.value = searchParam;
+    }
+    if (officeParam) {
+        officeSelect.value = officeParam;
+    }
+    if (conditionParam) {
+        conditionSelect.value = conditionParam;
+    }
+    if (typeParam) {
+        typeSelect.value = typeParam;
     }
 
-    searchInput.addEventListener('input', filterTable);
-    officeSelect.addEventListener('change', filterTable);
-    conditionSelect.addEventListener('change', filterTable);
-    typeSelect.addEventListener('change', filterTable);
+    let searchTimeout;
+
+    function updateFilters() {
+        const params = new URLSearchParams();
+        const search = searchInput.value.trim();
+        const office = officeSelect.value;
+        const condition = conditionSelect.value;
+        const type = typeSelect.value;
+
+        if (search) params.set('search', search);
+        if (office !== 'All Offices') params.set('office', office);
+        if (condition !== 'All Conditions') params.set('condition', condition);
+        if (type !== 'All Types') params.set('type', type);
+
+        const url = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = url;
+    }
+
+    officeSelect.addEventListener('change', updateFilters);
+    conditionSelect.addEventListener('change', updateFilters);
+    typeSelect.addEventListener('change', updateFilters);
+
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            updateFilters();
+        }
+    });
+
+    document.getElementById('clear-search').addEventListener('click', function() {
+        searchInput.value = '';
+        updateFilters();
+    });
 });
 </script>
+

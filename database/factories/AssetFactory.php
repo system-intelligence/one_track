@@ -17,8 +17,33 @@ class AssetFactory extends Factory
     public function definition(): array
     {
         $types = ['Laptop', 'Desktop'];
-        $conditions = ['Excellent', 'Good', 'Fair'];
+        $conditions = ['working', 'needs repair', 'broken'];
         $offices = ['Office', 'Kaybiga', 'Agency', 'Operation'];
+        $peripheralTypes = ['Mouse', 'Keyboard', 'Printer', 'Speaker', 'Headset'];
+        $peripheralConditions = ['working', 'needs repair', 'broken'];
+
+        // Generate 1-4 random peripherals
+        $peripherals = [];
+        $numPeripherals = fake()->numberBetween(1, 4);
+
+        for ($i = 0; $i < $numPeripherals; $i++) {
+            $peripherals[] = [
+                'type' => fake()->randomElement($peripheralTypes),
+                'details' => fake()->randomElement([
+                    'Logitech MX Master 3',
+                    'Dell KB216',
+                    'HP LaserJet Pro',
+                    'JBL Go 3',
+                    'Sony WH-1000XM4',
+                    'Razer DeathAdder',
+                    'Corsair K57',
+                    'Epson EcoTank',
+                    'Bose SoundLink',
+                    'Apple AirPods Pro'
+                ]),
+                'condition' => fake()->randomElement($peripheralConditions),
+            ];
+        }
 
         return [
             'office' => fake()->randomElement($offices),
@@ -33,6 +58,7 @@ class AssetFactory extends Factory
                 'NVIDIA GTX 1650', 'NVIDIA RTX 3060', 'Intel Iris XE', 'AMD Radeon RX 6600'
             ]),
             'condition' => fake()->randomElement($conditions),
+            'peripherals' => $peripherals,
         ];
     }
 }
